@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     glib gtk libICE gnome-desktop json-glib xorg.xtrans gnome3.defaultIconTheme
-    gsettings-desktop-schemas systemd epoxy
+    gnome3.gnome-settings-daemon gsettings-desktop-schemas systemd epoxy
   ];
 
   postPatch = ''
@@ -40,7 +40,8 @@ stdenv.mkDerivation rec {
       --prefix PATH : "${glib.dev}/bin" \
       --prefix GI_TYPELIB_PATH : "$GI_TYPELIB_PATH" \
       --suffix XDG_DATA_DIRS : "$out/share:$GSETTINGS_SCHEMAS_PATH" \
-      --suffix XDG_DATA_DIRS : "${gnome3.gnome-shell}/share"
+      --suffix XDG_DATA_DIRS : "${gnome3.gnome-shell}/share"\
+      --suffix XDG_CONFIG_DIRS : "${gnome3.gnome-settings-daemon}/etc/xdg"
   '';
 
   passthru = {
