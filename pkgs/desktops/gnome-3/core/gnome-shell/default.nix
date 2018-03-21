@@ -1,6 +1,6 @@
 { fetchurl, fetchpatch, substituteAll, stdenv, meson, ninja, pkgconfig, gnome3, json-glib, libcroco, gettext, libsecret
 , python3Packages, libsoup, polkit, clutter, networkmanager, docbook_xsl , docbook_xsl_ns, at-spi2-core
-, libstartup_notification, telepathy-glib, telepathy-logger, libXtst, unzip, glibcLocales
+, libstartup_notification, telepathy-glib, telepathy-logger, libXtst, unzip, glibcLocales, shared-mime-info
 , libgweather, libcanberra-gtk3, librsvg, geoclue2, perl, docbook_xml_dtd_42
 , libpulseaudio, libical, nss, gobjectIntrospection, gstreamer, wrapGAppsHook
 , accountsservice, gdk_pixbuf, gdm, upower, ibus, networkmanagerapplet
@@ -72,6 +72,14 @@ in stdenv.mkDerivation rec {
 
   postInstall = ''
     glib-compile-schemas $out/share/glib-2.0/schemas
+  '';
+
+  preFixup = ''
+    gappsWrapperArgs+=(
+      # Until glib’s xdgmime is patched
+      # Fixes “Failed to load resource:///org/gnome/shell/theme/noise-texture.png: Unrecognized image file format”
+      --prefix XDG_DATA_DIRS : "${shared-mime-info}/share"
+    )
   '';
 
   passthru = {
